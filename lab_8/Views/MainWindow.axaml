@@ -1,0 +1,96 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:lab_8.ViewModels"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+		xmlns:model="using:lab_8.Models"
+        mc:Ignorable="d" d:DesignWidth="1000" d:DesignHeight="600"
+		MinWidth="1000" MinHeight="600"
+		MaxWidth="1000" MaxHeight="600"
+		Width="1000" Height="600"
+        x:Class="lab_8.Views.MainWindow"
+        Icon="/Assets/main_logo.ico"
+        Title="Kanban Board"
+		Background="AntiqueWhite">
+
+    <Design.DataContext>
+        <vm:MainWindowViewModel/>
+    </Design.DataContext>
+
+	<DockPanel>
+		<Menu Background="AntiqueWhite" DockPanel.Dock="Top" VerticalAlignment="Top">
+			<MenuItem Foreground="Gray" Header="File">
+				<MenuItem Header="New" Name="NewKanbanBoard"/>
+				<MenuItem Header="Save" Name="SaveKanbanBoard"/>
+				<MenuItem Header="Load" Name="LoadKanbanBoard"/>
+				<Separator />
+				<MenuItem Header="Exit" Name="ExitKanbanBoard"/>
+			</MenuItem>
+			<MenuItem Foreground="Gray" Header="About" Name="WhoDone"/>
+		</Menu>
+
+		<Grid Background="AntiqueWhite" ColumnDefinitions="*,*,*" RowDefinitions="30, *, 30" ShowGridLines="True">
+			<TextBlock Grid.Column="0"  FontSize="15" Text="Запланированно" Foreground="Gray" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+			<TextBlock Grid.Column="1"  FontSize="15" Text="В работе" Foreground="Gray" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+			<TextBlock Grid.Column="2"  FontSize="15" Text="Выполненно" Foreground="Gray" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+
+			<ListBox ScrollViewer.VerticalScrollBarVisibility="Visible" Background="White" Grid.Column="0" Grid.Row="1" Items="{Binding Planned}" AutoScrollToSelectedItem="False">
+				<ListBox.ItemTemplate>
+					<DataTemplate DataType="{x:Type model:Task}" >
+						<Expander IsExpanded="{Binding IsSelected}" Foreground="Gray" Background="AntiqueWhite" Header="{Binding Header}" HorizontalContentAlignment="Stretch">
+							<StackPanel>
+								<TextBlock Foreground="White" Text="Заголовок:" />
+								<TextBox Foreground="White" Text="{Binding Header}"/>
+								<TextBlock Foreground="White" Text="Описание"/>
+								<TextBox Text="{Binding Description}" Foreground="Gray" Background="White" TextWrapping="NoWrap" AcceptsReturn="True" Height="100"/>
+								<Image Source="{Binding Image}" Height="150"/>
+								<Button Content="Добавить фото" Foreground="White" HorizontalAlignment="Stretch" Command="{Binding $parent[ListBox].VisualRoot.addImage}" CommandParameter="{Binding}"/>
+								<Button Content="Удалить задачу" Foreground="White" HorizontalAlignment="Stretch" Command="{Binding $parent[ListBox].DataContext.deletePlannedTask}" CommandParameter="{Binding}"/>
+							</StackPanel>
+						</Expander>
+					</DataTemplate>
+				</ListBox.ItemTemplate>
+			</ListBox>
+
+			<ListBox ScrollViewer.VerticalScrollBarVisibility="Visible" Background="White" Grid.Column="1" Grid.Row="1" Items="{Binding AtWork}" AutoScrollToSelectedItem="False">
+				<ListBox.ItemTemplate>
+					<DataTemplate DataType="{x:Type model:Task}" >
+						<Expander IsExpanded="{Binding IsSelected}" Foreground="Gray" Background="AntiqueWhite" Header="{Binding Header}" HorizontalContentAlignment="Stretch">
+							<StackPanel>
+								<TextBlock Foreground="White" Text="Заголовок:" />
+								<TextBox Foreground="White" Text="{Binding Header}"/>
+								<TextBlock Foreground="White" Text="Описание"/>
+								<TextBox Text="{Binding Description}" Foreground="Gray" Background="White" TextWrapping="NoWrap" AcceptsReturn="True" Height="100"/>
+								<Image Source="{Binding Image}" Height="150"/>
+								<Button Content="Добавить фото" HorizontalAlignment="Stretch" Command="{Binding $parent[ListBox].VisualRoot.addImage}" CommandParameter="{Binding}"/>
+								<Button Content="Удалить задачу" HorizontalAlignment="Stretch" Command="{Binding $parent[ListBox].DataContext.deleteAtWorkTask}" CommandParameter="{Binding}"/>
+							</StackPanel>
+						</Expander>
+					</DataTemplate>
+				</ListBox.ItemTemplate>
+			</ListBox>
+
+			<ListBox ScrollViewer.VerticalScrollBarVisibility="Visible" Background="White" Grid.Column="2" Grid.Row="1" Items="{Binding Done}" AutoScrollToSelectedItem="False">
+				<ListBox.ItemTemplate>
+					<DataTemplate DataType="{x:Type model:Task}" >
+						<Expander IsExpanded="{Binding IsSelected}" Foreground="Gray" Background="AntiqueWhite" Header="{Binding Header}" HorizontalContentAlignment="Stretch">
+							<StackPanel>
+								<TextBlock Foreground="White" Text="Заголовок:" />
+								<TextBox Foreground="White" Text="{Binding Header}"/>
+								<TextBlock Foreground="White" Text="Описание"/>
+								<TextBox Text="{Binding Description}" Foreground="Gray" Background="White" TextWrapping="NoWrap" AcceptsReturn="True" Height="100"/>
+								<Image Source="{Binding Image}" Height="150"/>
+								<Button Content="Добавить фото" HorizontalAlignment="Stretch" Command="{Binding $parent[ListBox].VisualRoot.addImage}" CommandParameter="{Binding}"/>
+								<Button Content="Удалить задачу" HorizontalAlignment="Stretch" Command="{Binding $parent[ListBox].DataContext.deleteDoneTask}" CommandParameter="{Binding}"/>
+							</StackPanel>
+						</Expander>
+					</DataTemplate>
+				</ListBox.ItemTemplate>
+			</ListBox>
+
+			<Button Command="{Binding addPlannedTask}" Grid.Column="0" Grid.Row="2"  FontSize="15"  Content="Добавить" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Background="AntiqueWhite" Foreground="Gray"/>
+			<Button Command="{Binding addAtWorkTask}" Grid.Column="1" Grid.Row="2"  FontSize="15" Content="Добавить" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Background="AntiqueWhite" Foreground="Gray"/>
+			<Button Command="{Binding addDoneTask}" Grid.Column="2" Grid.Row="2"  FontSize="15" Content="Добавить" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Background="AntiqueWhite" Foreground="Gray"/>
+		</Grid>
+	</DockPanel>
+</Window>
